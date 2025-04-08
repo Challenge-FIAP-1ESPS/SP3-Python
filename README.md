@@ -1,37 +1,47 @@
-# Sprint 3 - Python
+# Receita Médica Automatizada - Hospital Sabará
 
-## Integrantes
+**Integrantes**
 - Davi Daparé RM: 560721
 - Erick Cardoso RM: 560440
 - Gabrielly Candido RM: 560916
 - João Victor Ferreira RM: 560439
 - Luiza Ribeiro RM: 560200
 
-## Ideia do projeto - Portal Digital para o Hospital Sabará
+## Descrição do Projeto
 
-O portal digital foi desenvolvido para integrar médicos, pacientes e equipes de apoio (limpeza, farmácia, manutenção e administração) do Hospital Sabará. A solução visa resolver problemas como falhas na comunicação, atrasos nos agendamentos, dificuldade no acesso a informações e ineficiência nos processos administrativos, trazendo uma maior organização e eficiência para o hospital.
+Este projeto visa automatizar o processo de emissão e envio de receitas médicas no Hospital Sabará. Por meio da tecnologia de reconhecimento de voz e automação de documentos, o sistema permite que o médico dite a receita, que é transcrita automaticamente, preenchida em um modelo padrão e enviada por e-mail ao paciente.
 
-## Especificações Técnicas
-COMPLETAR DEPOIS 
+## Objetivo
 
-## Diagrama da arquitetura e fluxo do projeto
-IMAGEM E FAZER UMA DESCRIÇÃO DETALHADA
+- Reduzir o tempo de emissão de receitas médicas;
+- Minimizar erros manuais na prescrição;
+- Facilitar a comunicação entre médicos e pacientes;
+- Melhorar a experiência dos pacientes e a eficiência do atendimento.
 
 ## Funcionalidades
-- **Comunicação Eficiente:** Canal centralizado entre médicos, pacientes e equipes.
-- **Automatização de Processos:** Agendamento de consultas, registros médicos e controle de medicamentos.
-- **Acesso Centralizado:** Interface para prontuários, relatórios e atualizações em tempo real.
-- **Eficiência Operacional:** Redução de erros administrativos e otimização de tempo.
-- **Gamificação:** Atividades interativas para crianças, tornando o ambiente mais acolhedor.
 
-## Benefícios
-- **Para Pacientes e Familiares:** Comunicação direta com médicos, acompanhamento de tratamentos e acesso a resultados.
-- **Para Médicos e Equipes de Saúde:** Acesso rápido a informações clínicas, melhor coordenação e redução de tarefas manuais.
-- **Para Funcionários de Apoio:** Organização de tarefas de limpeza e distribuição de medicamentos.
-- **Para Gestores:** Relatórios para decisões rápidas e gestão de recursos otimizada.
+- Coleta de dados do paciente (nome e e-mail);
+- Reconhecimento de voz para transcrição da receita;
+- Preenchimento automático de um modelo de receita médica;
+- Envio da receita ao paciente por e-mail com anexo em `.docx`.
 
-## Estrutura
-- **Dashboards:** Para cada home existe um dashboard personalizado de acordo com as necessidades do tipo de cadastro.
-- **Área de Login e Cadastro:** O paciente e os funcionários do hospital terão um login e senha para entrar no portal. Isso permite a segurança e personalização das informações armazenadas.
-- **Automatização de Processos:** No portal, é possível fazer qualquer atividade do setor hospitalar que envolva a enfermaria, medicina, farmácia, limpeza, manutenção e administração. 
-- **Chatbot:** Desenvolvimento de Chatbot para facilitar a comunicação entre as áreas.
+## Tecnologias e Ferramentas Utilizadas
+
+- **Python 3.x**
+- Bibliotecas:
+  - `os`
+  - `docx`
+  - `datetime`
+  - `speech_recognition`
+  - `smtplib`
+  - `email`
+
+## Estrutura do Código
+
+- **Função `coletar_dados_pacientes()`**: Solicita o nome e e-mail do paciente.
+- **Função `ouvir_medico()`**: Utiliza o microfone para capturar a receita ditada pelo médico.
+- **Função `preencher_receita()`**: Gera o arquivo `.docx` com os dados coletados.
+- **Função `enviar_email()`**: Envia a receita por e-mail automaticamente.
+
+## Fluxograma do Projeto
+
