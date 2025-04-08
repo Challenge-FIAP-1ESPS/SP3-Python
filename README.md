@@ -42,3 +42,19 @@ Este projeto visa automatizar o processo de emissão e envio de receitas médica
 - **Função `ouvir_medico()`**: Utiliza o microfone para capturar a receita ditada pelo médico.
 - **Função `preencher_receita()`**: Gera o arquivo `.docx` com os dados coletados.
 - **Função `enviar_email()`**: Envia a receita por e-mail automaticamente.
+
+## Fluxograma do Projeto
+
+## Como Executar
+
+1. Verifique se todas as bibliotecas necessárias estão instaladas.
+2. Execute o arquivo Python.
+3. Insira as informações do paciente quando solicitado.
+4. Dite a receita médica no microfone.
+5. O sistema gerará o arquivo `.docx` e enviará automaticamente para o e-mail informado.
+
+## Contribuição
+
+Este projeto foi desenvolvido como atividade prática da disciplina *Computational Thinking With Python*, com foco em aplicar habilidades de automação e processamento de dados para solucionar desafios reais.
+
+
