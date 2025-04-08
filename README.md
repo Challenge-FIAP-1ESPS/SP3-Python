@@ -42,6 +42,3 @@ Este projeto visa automatizar o processo de emissão e envio de receitas médica
 - **Função `ouvir_medico()`**: Utiliza o microfone para capturar a receita ditada pelo médico.
 - **Função `preencher_receita()`**: Gera o arquivo `.docx` com os dados coletados.
 - **Função `enviar_email()`**: Envia a receita por e-mail automaticamente.
-
-## Fluxograma do Projeto
-
