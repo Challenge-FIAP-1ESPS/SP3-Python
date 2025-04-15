@@ -6,6 +6,7 @@ import speech_recognition as sr  #Reconhecimento de voz
 import smtplib  #Envia e-mails usando protocolo SMTP
 from email.message import EmailMessage  #Cria e gerencia mensagens de e-mail
 import uuid
+from fpdf import FPDF  # Biblioteca para gerar arquivos PDF
 
 #Coleta dados do paciente
 def coletar_dados_pacientes():
@@ -51,71 +52,100 @@ def ouvir_medico():
         return ""
 
 #Preenche a receita no modelo
-def preencher_receita(nome_paciente, receita_formatada, caminho_modelo):
-    # Abre o modelo da receita (arquivo .docx) usando a biblioteca python-docx
-    doc = Document(caminho_modelo)
+from fpdf import FPDF  # Biblioteca para gerar arquivos PDF
 
-    # Pega a data atual no formato "dd/mm/aaaa"
+def preencher_receita_pdf(nome_paciente, receita_formatada):
+    pdf = FPDF()  # Cria um novo objeto PDF
+    pdf.add_page()  # Adiciona uma nova página em branco no PDF
+    pdf.set_font("Arial", size=12)  # Define a fonte inicial como Arial, tamanho 12
+
+    # Obtém a data atual no formato brasileiro (ex: 15/04/2025)
     data_hoje = datetime.now().strftime("%d/%m/%Y")
 
-    # Percorre cada parágrafo do documento
-    for paragrafo in doc.paragraphs:
-        # Substitui o marcador {{nome_paciente}} pelo nome do paciente
-        paragrafo.text = paragrafo.text.replace("{{nome_paciente}}", nome_paciente)
-        # Substitui o marcador {{receita_formatada}} pelo conteúdo da receita
-        paragrafo.text = paragrafo.text.replace("{{receita_formatada}}", receita_formatada)
-        # Substitui o marcador {{data}} pela data atual
-        paragrafo.text = paragrafo.text.replace("{{data}}", data_hoje)
+    # === Cabeçalho ===
+    pdf.set_font("Arial", style='B', size=14)  # Define fonte em negrito e maior para o título
+    pdf.cell(200, 10, txt="Hospital Sabará - Receita Médica", ln=True, align='C')  # Escreve o título centralizado
+    pdf.ln(10)  # Adiciona uma linha em branco (espaçamento)
 
-    # Gera um ID único aleatório com 8 caracteres para o nome do arquivo
-    id_unico = str(uuid.uuid4())[:8]
+    # === Informações do paciente ===
+    pdf.set_font("Arial", size=12)  # Volta a fonte normal, tamanho 12
+    pdf.cell(200, 10, txt=f"Paciente: {nome_paciente}", ln=True)  # Escreve o nome do paciente
+    pdf.cell(200, 10, txt=f"Data: {data_hoje}", ln=True)  # Escreve a data da receita
+    pdf.ln(10)  # Linha em branco
 
-    # Define o nome do novo arquivo usando o ID gerado
-    nome_arquivo = f"receita_{id_unico}.docx"
+    # === Prescrição médica ===
+    pdf.multi_cell(0, 10, txt=f"Prescrição:\n{receita_formatada}")  # Escreve a prescrição recebida do médico
+    pdf.ln(20)  # Espaço antes da assinatura
 
-    # Cria o caminho completo onde o arquivo será salvo (na pasta atual do script)
-    caminho_saida = os.path.join(os.getcwd(), nome_arquivo)
+    # === Assinatura digital e rodapé ===
+    pdf.set_font("Arial", size=11)  # Define fonte um pouco menor
+    pdf.cell(200, 10, txt=f"Assinado digitalmente em: {data_hoje}", ln=True)  # Mostra a data da assinatura
+    pdf.ln(10)  # Espaço em branco
+    pdf.cell(200, 10, txt="________________________", ln=True)  # Linha para simular a assinatura
+    pdf.cell(200, 10, txt="Dr. Marcos L. Ferreira", ln=True)  # Nome do médico
+    pdf.cell(200, 10, txt="CRM-SP 123456", ln=True)  # Registro CRM
+    pdf.cell(200, 10, txt="Clínico Geral", ln=True)  # Especialidade médica
 
-    # Salva o novo documento com os dados preenchidos
-    doc.save(caminho_saida)
+    # === Geração e salvamento do PDF ===
+    nome_arquivo = f"receita_{uuid.uuid4().hex[:8]}.pdf"  # Cria um nome de arquivo com ID único
+    caminho_saida = os.path.join(os.getcwd(), nome_arquivo)  # Define o caminho para salvar o arquivo na pasta atual
 
-    # Mostra no terminal o local onde o arquivo foi salvo
-    print(f"\n✅ Receita salva como: {caminho_saida}")
+    pdf.output(caminho_saida)  # Salva o arquivo PDF no caminho definido
 
-    # Retorna o caminho do arquivo salvo (pode ser usado para envio por e-mail, etc.)
-    return caminho_saida
+    # Mensagem final confirmando onde o PDF foi salvo
+    print(f"\n✅ Receita PDF salva como: {caminho_saida}")
+
+    return caminho_saida  # Retorna o caminho do arquivo gerado para uso posterior (ex: envio por e-mail)
+
+
 
 
 #Envia e-mail com a receita
 def enviar_email(destinatario, caminho_anexo, nome_paciente):
-    #Cria uma nova mensagem de e-mail
+    # Cria um objeto de mensagem de e-mail
     msg = EmailMessage()
-    msg["Subject"] = "Receita médica digital"  # Assunto do e-mail
-    msg["From"] = "gabriellycasilva@gmail.com"  # Remetente
-    msg["To"] = destinatario  # Destinatário
-    #Corpo do e-mail
-    msg.set_content(f"Olá {nome_paciente},\n\nSegue em anexo sua receita médica.\n\nAtenciosamente,\nHospital Sabará")
 
-    #Abre o arquivo da receita para anexar ao e-mail
+    # Define o assunto do e-mail que o paciente vai ver na caixa de entrada
+    msg["Subject"] = "Receita mágica digital"
+
+    # Define o remetente (quem está enviando o e-mail)
+    msg["From"] = "gabriellycasilva@gmail.com"
+
+    # Define o destinatário (o paciente que vai receber a receita)
+    msg["To"] = destinatario
+
+    # Define o corpo do e-mail com uma mensagem personalizada
+    msg.set_content(f"""Olá, {nome_paciente}
+
+Segue em anexo sua receita mágica.
+
+Atenciosamente,
+Hospital Sabará""")
+
+    # Abre o arquivo do PDF gerado com a receita
     with open(caminho_anexo, "rb") as file:
-        conteudo = file.read()
-        nome_arquivo = os.path.basename(caminho_anexo)
-        #Adiciona o anexo ao e-mail
+        conteudo = file.read()  # Lê o conteúdo binário do PDF
+        nome_arquivo = os.path.basename(caminho_anexo)  # Pega só o nome do arquivo (sem o caminho)
+
+        # Adiciona o PDF como anexo na mensagem
         msg.add_attachment(
-            conteudo,
-            maintype="application",
-            subtype="vnd.openxmlformats-officedocument.wordprocessingml.document",
-            filename=nome_arquivo
+            conteudo,  # conteúdo binário do arquivo
+            maintype="application",  # tipo principal do arquivo (arquivo genérico)
+            subtype="pdf",  # tipo específico (arquivo PDF)
+            filename=nome_arquivo  # nome do arquivo que aparecerá no anexo
         )
 
-    #Conecta ao servidor do Gmail usando conexão segura
+    # Cria uma conexão segura com o servidor do Gmail pela porta 465
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-        #Faz login com e-mail e senha de aplicativo
-        smtp.login("gabriellycasilva@gmail.com", "xcup fldl dclb hbzo")  # <- senha de app
-        #Envia a mensagem de e-mail
+        # Faz login na conta do Gmail usando uma senha de aplicativo
+        smtp.login("gabriellycasilva@gmail.com", "xcup fldl dclb hbzo")
+
+        # Envia a mensagem com o anexo para o destinatário
         smtp.send_message(msg)
 
+    # Mensagem de confirmação no terminal
     print("✅ E-mail enviado com sucesso!")
+
 
 #Execução principal
 
@@ -129,7 +159,7 @@ if transcricao != "":
     #Caminho do modelo de receita que será usado
     caminho_modelo = "receita_medica.docx"
     #Preenche a receita com os dados coletados
-    caminho_receita = preencher_receita(nome_paciente, transcricao, caminho_modelo)
+    caminho_receita = preencher_receita_pdf(nome_paciente, transcricao)
     #Envia o e-mail com a receita em anexo
     enviar_email(email_paciente, caminho_receita, nome_paciente)
 else:
