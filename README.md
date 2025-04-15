@@ -71,7 +71,7 @@ Este projeto tem como objetivo automatizar o processo de emissão e envio de rec
 
 ---
 
-## 📚 Contribuição
+## Contribuição
 
 Este projeto foi desenvolvido como atividade prática da disciplina **Computational Thinking With Python**, com o objetivo de aplicar conhecimentos em automação, transcrição de voz e manipulação de arquivos, solucionando problemas reais do cotidiano médico.
 
