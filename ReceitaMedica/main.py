@@ -1,6 +1,5 @@
 #Importa bibliotecas necessárias
 import os  #Trabalha com caminhos e operações do sistema de arquivos
-from docx import Document  #Manipula documentos do Word (.docx)
 from datetime import datetime  #Trabalha com datas e horários
 import speech_recognition as sr  #Reconhecimento de voz
 import smtplib  #Envia e-mails usando protocolo SMTP
